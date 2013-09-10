@@ -45,11 +45,11 @@ class UserController extends BaseController {
 			    	foreach ($data['allUsers'] as $user) {
 			    		if ($user->isActivated()) 
 			    		{
-			    			$data['userStatus'][$user->id] = "Active";
+			    			$data['userStatus'][$user->id] = trans('messages.activo');
 			    		} 
 			    		else 
 			    		{
-			    			$data['userStatus'][$user->id] = "Not Active";
+			    			$data['userStatus'][$user->id] = trans('messages.no activo');
 			    		}
 
 			    		//Pull Suspension & Ban info for this user
@@ -59,14 +59,14 @@ class UserController extends BaseController {
 			    		if($throttle->isSuspended())
 					    {
 					        // User is Suspended
-					        $data['userStatus'][$user->id] = "Suspended";
+					        $data['userStatus'][$user->id] = trans('messages.suspendido');
 					    }
 
 			    		//Check for ban
 					    if($throttle->isBanned())
 					    {
 					        // User is Banned
-					        $data['userStatus'][$user->id] = "Banned";
+					        $data['userStatus'][$user->id] = trans('messages.prohibido');
 					    }
 
 			    	}
@@ -74,13 +74,13 @@ class UserController extends BaseController {
 
 			    return View::make('users.index')->with($data);
 			} else {
-				Session::flash('error', 'You are not logged in.');
+				Session::flash('error', trans('messages.No te has logueado'));
 				return Redirect::to('/');
 			}
 		}
 		catch (Cartalyst\Sentry\UserNotFoundException $e)
 		{
-		    Session::flash('error', 'There was a problem accessing your account.');
+		    Session::flash('error', trans('messages.Hubo un problema al entrar en tu cuenta'));
 			return Redirect::to('/');
 		}
 	}
@@ -106,14 +106,14 @@ class UserController extends BaseController {
 				$data['myGroups'] = $data['user']->getGroups();
 				return View::make('users.show')->with($data);
 			} else {
-				Session::flash('error', 'You don\'t have access to that user.');
+				Session::flash('error', trans('messages.No tienes acceso a ese usuario'));
 				return Redirect::to('/');
 			}
 
 		}
 		catch (Cartalyst\Sentry\UserNotFoundException $e)
 		{
-		    Session::flash('error', 'There was a problem accessing your account.');
+		    Session::flash('error', trans('messages.Hubo un problema al entrar en tu cuenta'));
 			return Redirect::to('/');
 		}
 	}
@@ -170,22 +170,22 @@ class UserController extends BaseController {
 				//send email with link to activate.
 				Mail::send('emails.auth.welcome', $data, function($m) use($data)
 				{
-				    $m->to($data['email'])->subject('Welcome to Laravel4 With Sentry');
+				    $m->to($data['email'])->subject(trans('messages.Bienvenido a'). ' ' .trans('messages.Nombre de aplicación'));
 				});
 
 				//success!
-		    	Session::flash('success', 'Your account has been created. Check your email for the confirmation link.');
+		    	Session::flash('success', trans('messages.Tu cuenta ha sido creada. Revisa tu correo para activarla'));
 		    	return Redirect::to('/');
 
 			}
 			catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
 			{
-			    Session::flash('error', 'Login field required.');
+			    Session::flash('error', trans('messages.El campo login es requerido'));
 			    return Redirect::to('users/register')->withErrors($v)->withInput();
 			}
 			catch (Cartalyst\Sentry\Users\UserExistsException $e)
 			{
-			    Session::flash('error', 'User already exists.');
+			    Session::flash('error', trans('messages.El usuario ya existe'));
 			    return Redirect::to('users/register')->withErrors($v)->withInput();
 			}
 
@@ -210,24 +210,24 @@ class UserController extends BaseController {
 		    	$userGroup = Sentry::getGroupProvider()->findById(1);
 		    	$user->addGroup($userGroup);
 
-		        Session::flash('success', 'Your account has been activated. <a href="/users/login">Click here</a> to log in.');
+		        Session::flash('success', trans('messages.Tu cuenta ha sido creada'));
 				return Redirect::to('/');
 		    }
 		    else
 		    {
 		        // User activation failed
-		        Session::flash('error', 'There was a problem activating this account. Please contact the system administrator.');
+		        Session::flash('error', trans('messages.Hubo un problema activando esta cuenta. Por favor contacta al administrador del sistema.'));
 				return Redirect::to('/');
 		    }
 		}
 		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
-		    Session::flash('error', 'User does not exist.');
+		    Session::flash('error', trans('messages.El usuario no existe'));
 			return Redirect::to('/');
 		}
 		catch (Cartalyst\SEntry\Users\UserAlreadyActivatedException $e)
 		{
-		    Session::flash('error', 'You have already activated this account.');
+		    Session::flash('error', trans('messages.Tu ya has activado esta cuenta'));
 			return Redirect::to('/');
 		}
 
@@ -299,7 +299,7 @@ class UserController extends BaseController {
 			catch (Cartalyst\Sentry\Users\UserNotActivatedException $e)
 			{
 			    echo 'User not activated.';
-			     Session::flash('error', 'You have not yet activated this account. <a href="/users/resend">Resend actiavtion?</a>');
+			    Session::flash('error', trans('messages.Aún no has activado esta cuenta'));
 				return Redirect::to('users/login')->withErrors($v)->withInput();
 			}
 
@@ -307,12 +307,12 @@ class UserController extends BaseController {
 			catch (Cartalyst\Sentry\Throttling\UserSuspendedException $e)
 			{
 			    $time = $throttle->getSuspensionTime();
-			    Session::flash('error', "Your account has been suspended for $time minutes.");
+			    Session::flash('error', trans('messages.Tu cuenta ha sido suspendida', array('time' => $time)));
 				return Redirect::to('users/login')->withErrors($v)->withInput();
 			}
 			catch (Cartalyst\Sentry\Throttling\UserBannedException $e)
 			{
-			    Session::flash('error', 'You have been banned.');
+			    Session::flash('error', trans('messages.Se ha prohibido tu acceso al sistema'));
 				return Redirect::to('users/login')->withErrors($v)->withInput();
 			}
 
@@ -320,7 +320,6 @@ class UserController extends BaseController {
 			return Redirect::to('/');
 		}
 	}
-
 
 	/**
 	 * Logout
@@ -374,103 +373,18 @@ class UserController extends BaseController {
 			    // Email the reset code to the user
 				Mail::send('emails.auth.reset', $data, function($m) use($data)
 				{
-				    $m->to($data['email'])->subject('Password Reset Confirmation | Laravel4 With Sentry');
+				    $m->to($data['email'])->subject(trans('messages.Confirmación de reseteo de clave'). ' | '. trans('messages.Nombre de aplicación'));
 				});
 
-				Session::flash('success', 'Check your email for password reset information.');
+				Session::flash('success', trans('messages.Revisa tu correo por la información del reseteo de clave'));
 			    return Redirect::to('/');
 
 			}
 			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 			{
-			    echo 'User does not exist';
+			    echo trans('messages.El usuario no existe');
 			}
 		}
-
-	}
-
-
-	/**
-	 * Show the 'Resend Activation' Form
-	 * @return View
-	 */
-	public function getResend()
-	{
-		//Show the Resend Activation Form
-		return View::make('users.resend');
-	}
-
-	/**
-	 * Process Resend Activation Request
-	 * @return View
-	 */
-	public function postResend()
-	{
-
-		// Gather Sanitized Input
-		$input = array(
-			'email' => Input::get('email')
-			);
-
-		// Set Validation Rules
-		$rules = array (
-			'email' => 'required|min:4|max:32|email'
-			);
-
-		//Run input validation
-		$v = Validator::make($input, $rules);
-
-		if ($v->fails())
-		{
-			// Validation has failed
-			return Redirect::to('users/resend')->withErrors($v)->withInput();
-		}
-		else 
-		{
-
-			try {
-				//Attempt to find the user. 
-				$user = Sentry::getUserProvider()->findByLogin(Input::get('email'));
-
-
-				if (!$user->isActivated())
-				{
-					//Get the activation code & prep data for email
-					$data['activationCode'] = $user->GetActivationCode();
-					$data['email'] = $input['email'];
-					$data['userId'] = $user->getId();
-
-					//send email with link to activate.
-					Mail::send('emails.auth.welcome', $data, function($m) use ($data)
-					{
-					    $m->to($data['email'])->subject('Activate your account');
-					});
-
-					//success!
-			    	Session::flash('success', 'Check your email for the confirmation link.');
-			    	return Redirect::to('/');
-				}
-				else 
-				{
-					Session::flash('error', 'That account has already been activated.');
-			    	return Redirect::to('/');
-				}
-
-			}
-			catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
-			{
-			    Session::flash('error', 'Login field required.');
-			    return Redirect::to('users/resend')->withErrors($v)->withInput();
-			}
-			catch (Cartalyst\Sentry\Users\UserExistsException $e)
-			{
-			    Session::flash('error', 'User already exists.');
-			    return Redirect::to('users/resend')->withErrors($v)->withInput();
-			}
-
-
-		}
-
 
 	}
 
@@ -498,17 +412,17 @@ class UserController extends BaseController {
 
 			    Mail::send('emails.auth.newpassword', $data, function($m) use($data)
 				{
-				    $m->to($data['email'])->subject('New Password Information | Laravel4 With Sentry');
+				    $m->to($data['email'])->subject(trans('messages.Nueva información sobre tu clave'). ' | '. trans('messages.Nombre de aplicación'));
 				});
 
-				Session::flash('success', 'Your password has been changed. Check your email for the new password.');
+				Session::flash('success', trans('messages.Tu clave ha cambiado, revisa tu correo por la nueva clave'));
 			    return Redirect::to('/');
 		        
 		    }
 		    else
 		    {
 		        // Password reset failed
-		    	Session::flash('error', 'There was a problem.  Please contact the system administrator.');
+		    	Session::flash('error', trans('messages.Hubo un problema. Por favor contacta al administrador del sistema.'));
 			    return Redirect::to('users/resetpassword');
 		    }
 		}
@@ -532,7 +446,7 @@ class UserController extends BaseController {
 		}
 		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
-		    echo 'User does not exist';
+		    echo trans('messages.El usuario no existe');
 		}
 	}
 
@@ -564,14 +478,14 @@ class UserController extends BaseController {
 				$data['userGroups'] = $data['user']->getGroups();
 				return View::make('users.edit')->with($data);
 			} else {
-				Session::flash('error', 'You don\'t have access to that user.');
+				Session::flash('error', trans('messages.No tienes acceso a ese usuario'));
 				return Redirect::to('/');
 			}
 
 		}
 		catch (Cartalyst\Sentry\UserNotFoundException $e)
 		{
-		    Session::flash('error', 'There was a problem accessing your account.');
+		    Session::flash('error', trans('messages.Hubo un problema al entrar en tu cuenta'));
 			return Redirect::to('/');
 		}
 	}
@@ -621,29 +535,29 @@ class UserController extends BaseController {
 				    if ($user->save())
 				    {
 				        // User information was updated
-				        Session::flash('success', 'Profile updated.');
+				        Session::flash('success', trans('messages.Perfil actualizado'));
 						return Redirect::to('users/show/'. $id);
 				    }
 				    else
 				    {
 				        // User information was not updated
-				        Session::flash('error', 'Profile could not be updated.');
+				        Session::flash('error', trans('messages.El perfil no se pudo actualizar'));
 						return Redirect::to('users/edit/' . $id);
 				    }
 
 				} else {
-					Session::flash('error', 'You don\'t have access to that user.');
+					Session::flash('error', trans('messages.No tienes acceso a ese usuario'));
 					return Redirect::to('/');
 				}			   			    
 			}
 			catch (Cartalyst\Sentry\Users\UserExistsException $e)
 			{
-			    Session::flash('error', 'User already exists.');
+			    Session::flash('error', trans('messages.El usuario ya existe'));
 				return Redirect::to('users/edit/' . $id);
 			}
 			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 			{
-			    Session::flash('error', 'User was not found.');
+			    Session::flash('error', trans('messages.El usuario no se encontró'));
 				return Redirect::to('users/edit/' . $id);
 			}
 		}
@@ -700,22 +614,22 @@ class UserController extends BaseController {
 				    	if ($user->save())
 					    {
 					        // User saved
-					        Session::flash('success', 'Your password has been changed.');
+					        Session::flash('success', trans('messages.Tu clave ha cambiado'));
 							return Redirect::to('users/show/'. $id);
 					    }
 					    else
 					    {
 					        // User not saved
-					        Session::flash('error', 'Your password could not be changed.');
+					        Session::flash('error', trans('messages.No se pudo cambiar tu clave'));
 							return Redirect::to('users/edit/' . $id);
 					    }
 					} else {
 						// The oldPassword did not match the password in the database. Abort. 
-						Session::flash('error', 'You did not provide the correct password.');
+						Session::flash('error', trans('messages.No has provisto una clave correcta'));
 						return Redirect::to('users/edit/' . $id);
 					}
 				} else {
-					Session::flash('error', 'You don\'t have access to that user.');
+					Session::flash('error', trans('messages.No tienes acceso a ese usuario'));
 					return Redirect::to('/');
 				}			   			    
 			}
@@ -731,7 +645,7 @@ class UserController extends BaseController {
 			}
 			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 			{
-			    Session::flash('error', 'User was not found.');
+			    Session::flash('error', trans('messages.El usuario no se encontró'));
 				return Redirect::to('users/edit/' . $id);
 			}
 		}
@@ -765,21 +679,21 @@ class UserController extends BaseController {
 						//The user should be added to this group
 						if ($user->addGroup($group))
 					    {
-					        $statusMessage .= "Added to " . $group->name . "<br />";
+					        $statusMessage .= trans('messages.Agregado a ') . $group->name . "<br />";
 					    }
 					    else
 					    {
-					        $statusMessage .= "Could not be added to " . $group->name . "<br />";
+					        $statusMessage .= trans('messages.No se ha podido agregar a ') . $group->name . "<br />";
 					    }
 					} else {
 						// The user should be removed from this group
 						if ($user->removeGroup($group))
 					    {
-					        $statusMessage .= "Removed from " . $group->name . "<br />";
+					        $statusMessage .= trans('messages.Removido de ')  . $group->name . "<br />";
 					    }
 					    else
 					    {
-					        $statusMessage .= "Could not be removed from " . $group->name . "<br />";
+					        $statusMessage .= trans('messages.No pudo ser removido de ') . $group->name . "<br />";
 					    }
 					}
 
@@ -789,19 +703,19 @@ class UserController extends BaseController {
 			} 
 			else 
 			{
-				Session::flash('error', 'You don\'t have access to that user.');
+				Session::flash('error', trans('messages.No tienes acceso a ese usuario'));
 				return Redirect::to('/');
 			}
 	
 		}
 		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
-		    Session::flash('error', 'User was not found.');
+		    Session::flash('error', trans('messages.El usuario no se encontró'));
 			return Redirect::to('users/edit/' . $id);
 		}
 		catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
 		{
-		    Session::flash('error', 'Trying to access unidentified Groups.');
+		    Session::flash('error', trans('messages.Intentando entrar a grupos no identificados') );
 			return Redirect::to('users/edit/' . $id);
 		}
 	}
@@ -826,14 +740,14 @@ class UserController extends BaseController {
 				$data['user'] = Sentry::getUserProvider()->findById($id);
 				return View::make('users.suspend')->with($data);
 			} else {
-				Session::flash('error', 'You are not allowed to do that.');
+				Session::flash('error', trans('messages.No tiene permitido hacer eso.'));
 				return Redirect::to('/');
 			}
 
 		}
 		catch (Cartalyst\Sentry\UserNotFoundException $e)
 		{
-		    Session::flash('error', 'There was a problem accessing that user\s account.');
+		    Session::flash('error', trans('messages.Hubo un problema al entrar en esa cuenta'));
 			return Redirect::to('/users');
 		}
 	}
@@ -872,13 +786,13 @@ class UserController extends BaseController {
     			$throttle->suspend();
 
     			//Done.  Return to users page.
-    			Session::flash('success', "User has been suspended for " . $input['suspendTime'] . " minutes.");
+    			Session::flash('success', trans('messages.El usuario ha sido suspendido por :tiempo minutos.', array('tiempo' => $input['suspendTime'])));
 				return Redirect::to('users');
 
 			}
 			catch (Cartalyst\Sentry\UserNotFoundException $e)
 			{
-			    Session::flash('error', 'There was a problem accessing that user\s account.');
+			    Session::flash('error', trans('messages.Hubo un problema al entrar en esa cuenta'));
 				return Redirect::to('/users');
 			}
 		}
@@ -896,19 +810,19 @@ class UserController extends BaseController {
 		    if ($user->delete())
 		    {
 		        // User was successfully deleted
-		        Session::flash('success', 'That user has been deleted.');
+		        Session::flash('success', trans('messages.El usuario ha sido borrado'));
 				return Redirect::to('/users');
 		    }
 		    else
 		    {
 		        // There was a problem deleting the user
-		        Session::flash('error', 'There was a problem deleting that user.');
+		        Session::flash('error', trans('messages.Hubo un problema borrando el usuario.'));
 				return Redirect::to('/users');
 		    }
 		}
 		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
-		    Session::flash('error', 'There was a problem accessing that user\s account.');
+		    Session::flash('error', trans('messages.Hubo un problema para entrar en la cuenta del(los) usuario(s).'));
 			return Redirect::to('/users');
 		}
 	}

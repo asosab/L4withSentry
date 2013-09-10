@@ -3,33 +3,33 @@
 {{-- Web site Title --}}
 @section('title')
 @parent
-Home
+{{ trans('messages.Perfil de usuario') }}
 @stop
 
 {{-- Content --}}
 @section('content')
 
   @if (Sentry::check())
-	<h4>Account Profile</h4>
+	<h4>{{ trans('messages.Perfil de usuario') }}</h4>
 	
   	<div class="well clearfix">
 	    <div class="span7">
 		    @if ($user->first_name)
-		    	<p><strong>First Name:</strong> {{ $user->first_name }} </p>
+		    	<p><strong>{{ trans('messages.nombre(s)') }}:</strong> {{ $user->first_name }} </p>
 			@endif
 			@if ($user->last_name)
-		    	<p><strong>Last Name:</strong> {{ $user->last_name }} </p>
+		    	<p><strong>{{ trans('messages.apellido(s)') }}:</strong> {{ $user->last_name }} </p>
 			@endif
-		    <p><strong>Email:</strong> {{ $user->email }}</p>
-		    <button class="btn btn-info" onClick="location.href='{{ URL::to('users/edit') }}/{{ $user->id}}'">Edit Profile</button>
+		    <p><strong>{{ trans('messages.Correo') }}:</strong> {{ $user->email }}</p>
+		    <button class="btn btn-info" onClick="location.href='{{ URL::to('users/edit') }}/{{ $user->id}}'">{{ trans('messages.Editar perfil') }}</button>
 		</div>
 		<div class="span4">
-			<p><em>Account created: {{ $user->created_at }}</em></p>
-			<p><em>Last Updated: {{ $user->updated_at }}</em></p>
+			<p><em>{{ trans('messages.Cuenta creada') }}: {{ $user->created_at }}</em></p>
+			<p><em>{{ trans('messages.Última actualización') }}: {{ $user->updated_at }}</em></p>
 		</div>
 	</div>
 
-	<h4>Group Memberships:</h4>
+	<h4>{{ trans('messages.Grupos a los que pertenece') }}:</h4>
 	<div class="well">
 	    <ul>
 	    	@if (count($myGroups) >= 1)
@@ -37,12 +37,12 @@ Home
 					<li>{{ $group['name'] }}</li>
 				@endforeach
 			@else 
-				<li>No Group Memberships.</li>
+				<li>{{ trans('messages.Sin grupos') }}.</li>
 			@endif
 	    </ul>
 	</div>
 
-	<h4>User Object</h4>
+	<h4>{{ trans('messages.Objeto usuario') }}</h4>
 	<div>
 		<p>{{ var_dump($user) }}</p>
 	</div>

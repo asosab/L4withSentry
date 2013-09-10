@@ -1,7 +1,9 @@
 {
 	"require": {
 		"laravel/framework": "4.0.*@dev",
-		"cartalyst/sentry": "2.0.*"
+		"cartalyst/sentry": "2.0.*",
+		"caouecs/laravel4-lang": "*",
+        "way/generators": "dev-master"
 	},
 	"autoload": {
 		"classmap": [

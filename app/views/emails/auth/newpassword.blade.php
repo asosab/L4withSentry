@@ -4,11 +4,11 @@
 		<meta charset="utf-8">
 	</head>
 	<body>
-		<h2>New Password</h2>
+		<h2>{{ trans('messages.Nueva clave') }}</h2>
 
-		<p>Here is your new password:</p>
+		<p>{{ trans('messages.Esta es tu nueva clave') }}:</p>
 		<p><blockquote>{{{ $newPassword }}}</blockquote></p>
-		<p>Thank you, <br />
-			~The Admin Team</p>
+        <p>{{ trans('messages.Gracias') }}, <br />
+            ~{{ trans('messages.Los administradores') }}</p>
 	</body>
 </html>

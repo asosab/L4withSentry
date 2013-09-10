@@ -4,11 +4,11 @@
 		<meta charset="utf-8">
 	</head>
 	<body>
-		<h2>Password Reset</h2>
+		<h2>{{ trans('messages.Cambio de clave') }}</h2>
 
-		<p>To reset your password, <a href="{{  URL::to('users/reset', array('id' => $userId, urlencode($resetCode))) }}">click here.</a></p>
-		<p>Or point your browser to this address: <br /> {{  URL::to('users/reset', array('id' => $userId, urlencode($resetCode))) }}</p>
-		<p>Thank you, <br />
-			~The Admin Team</p>
+		<p>{{ trans('messages.Para realizar el cambio de clave') }}, <a href="{{  URL::to('users/reset', array('id' => $userId, urlencode($resetCode))) }}">{{ trans('messages.haz click aquí') }}.</a></p>
+		<p>{{ trans('messages.O navega a esta dirección') }}: <br /> {{  URL::to('users/reset', array('id' => $userId, urlencode($resetCode))) }}</p>
+        <p>{{ trans('messages.Gracias') }}, <br />
+            ~{{ trans('messages.Los administradores') }}</p>
 	</body>
 </html>

@@ -52,7 +52,7 @@ return array(
 	|
 	*/
 
-	'locale' => 'en',
+	'locale' => 'es',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -65,7 +65,7 @@ return array(
 	|
 	*/
 
-	'key' => 'nkBlz8KjTZ3AfiWD6Vl4Gm9gERWayz9m',
+	'key' => 'nkBlz123483AfiWD6jl4Gm9gERWayz9m',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -113,6 +113,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Cartalyst\Sentry\SentryServiceProvider',
+		'Way\Generators\GeneratorsServiceProvider',
 
 
 	),
@@ -179,7 +180,7 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
-		'Sentry'		  => 'Cartalyst\Sentry\Facades\Laravel\Sentry'
+		'Sentry'          => 'Cartalyst\Sentry\Facades\Laravel\Sentry'
 
 	),
 

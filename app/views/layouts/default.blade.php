@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="utf-8" />
 		<title> 
@@ -41,10 +41,10 @@
 
 					<div class="nav-collapse collapse">
 						<ul class="nav">
-							<li {{ (Request::is('/') ? 'class="active"' : '') }}><a href="{{ URL::to('') }}">Home</a></li>
+							<li {{ (Request::is('/') ? 'class="active"' : '') }}><a href="{{ URL::to('') }}">{{ Lang::get('messages.inicio') }}</a></li>
 							@if (Sentry::check() && Sentry::getUser()->hasAccess('admin'))
-								<li {{ (Request::is('users*') ? 'class="active"' : '') }}><a href="{{ URL::to('/users') }}">Users</a></li>
-								<li {{ (Request::is('groups*') ? 'class="active"' : '') }}><a href="{{ URL::to('/groups') }}">Groups</a></li>
+								<li {{ (Request::is('users*') ? 'class="active"' : '') }}><a href="{{ URL::to('/users') }}">{{ Lang::get('messages.usuarios') }}</a></li>
+								<li {{ (Request::is('groups*') ? 'class="active"' : '') }}><a href="{{ URL::to('/groups') }}">{{ Lang::get('messages.grupos') }}</a></li>
 							@endif
 						</ul>
 
@@ -52,11 +52,11 @@
 							@if (Sentry::check())
 							<li class="navbar-text">{{ Sentry::getUser()->email }}</li>
 							<li class="divider-vertical"></li>
-							<li {{ (Request::is('users/show/' . Sentry::getUser()->id) ? 'class="active"' : '') }}><a href="{{ URL::to('/users/show/'.Sentry::getUser()->id) }}">Account</a></li>
-							<li><a href="{{ URL::to('users/logout') }}">Logout</a></li>
+							<li {{ (Request::is('users/show/' . Sentry::getUser()->id) ? 'class="active"' : '') }}><a href="{{ URL::to('/users/show/'.Sentry::getUser()->id) }}">{{ Lang::get('messages.cuenta') }}</a></li>
+							<li><a href="{{ URL::to('users/logout') }}">{{ Lang::get('messages.logout') }}</a></li>
 							@else
-							<li {{ (Request::is('users/login') ? 'class="active"' : '') }}><a href="{{ URL::to('users/login') }}">Login</a></li>
-							<li {{ (Request::is('users/register') ? 'class="active"' : '') }}><a href="{{ URL::to('users/register') }}">Register</a></li>
+							<li {{ (Request::is('users/login') ? 'class="active"' : '') }}><a href="{{ URL::to('users/login') }}">{{ Lang::get('messages.login') }}</a></li>
+							<li {{ (Request::is('users/register') ? 'class="active"' : '') }}><a href="{{ URL::to('users/register') }}">{{ Lang::get('messages.regístrate') }}</a></li>
 							@endif
 						</ul>
 					</div>

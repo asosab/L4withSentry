@@ -66,3 +66,19 @@ App::error(function(Exception $exception, $code)
 */
 
 require __DIR__.'/../filters.php';
+
+
+/*
+|--------------------------------------------------------------------------
+| Página en mantenimiento
+|--------------------------------------------------------------------------
+|
+| Cuando la página está en mantenimiento via "php artisan down" se puede
+| mostrar una página determinada
+|
+*/
+
+App::down(function()
+{
+    return Response::view('mantenimiento', array(), 503);
+});
